@@ -1,0 +1,33 @@
+from skimage import io, data, filters, exposure, color, util
+import matplotlib.pyplot as plt
+import numpy as np
+
+im=io.imread("soja.png",as_gray="True")
+
+io.imshow(im)
+
+im=util.img_as_ubyte(im)
+im.max()
+cont,ncinza=exposure.histogram(im)
+
+y,x=exposure.histogram(im)
+plt.bar(x,y)
+
+filters.threshold_otsu(im)
+
+def seglim(im,op,val):
+  lm,cm=im.shape
+  ims=np.zeros((lm,cm))
+  for l in range(lm):
+    for c in range(cm):
+      if op == ">":
+        if im[l,c]>=val:
+          ims[l,c]=1
+      if op =="<":  
+        if im[l,c]<=val:
+          ims[l,c]=1  
+  return ims   
+  
+  ims=seglim(im,">",48)
+  
+  io.imshow(ims)
